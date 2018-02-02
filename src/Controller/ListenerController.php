@@ -35,8 +35,15 @@ class ListenerController extends Controller
             $timeEnd->add(new \DateInterval('PT' . $interval . 'S'));
             $deviceId = $device->getId();
 
-            $schedule = new Schedule();
-            $schedule->setDeviceId($deviceId);
+            $schedule = $em->getRepository(Schedule::class)->findOneBy([
+                'deviceId' => $deviceId
+            ]);
+
+            if (!$schedule) {
+                $schedule = new Schedule();
+                $schedule->setDeviceId($deviceId);
+            }
+
             $schedule->setTimeStart($timeStart);
             $schedule->setTimeEnd($timeEnd);
 

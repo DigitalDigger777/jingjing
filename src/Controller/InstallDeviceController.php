@@ -29,14 +29,20 @@ class InstallDeviceController extends Controller
 
         $mac = $request->query->get('mac');
 
-        $device = new Device();
-        $device->setShopperId(null);
-        $device->setIsEnable(true);
-        $device->setMac($mac);
-        $device->setName('');
+        $device = $em->getRepository(Device::class)->findOneBy([
+            'mac' => $mac
+        ]);
 
-        $em->persist($device);
-        $em->flush();
+        if (!$device) {
+            $device = new Device();
+            $device->setShopperId(null);
+            $device->setIsEnable(true);
+            $device->setMac($mac);
+            $device->setName('');
+
+            $em->persist($device);
+            $em->flush();
+        }
 
         return new Response('Save Successful', 200);
     }
