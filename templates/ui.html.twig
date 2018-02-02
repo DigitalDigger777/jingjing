@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+
+    <link rel="stylesheet" href="/weui-master/dist/style/weui.min.css"/>
+    <script src="/js/jquery-3.3.1.min.js"></script>
+    <script src="/js/app.js"></script>
+{% endblock %}
+{% block body %}
+    <div class="weui-flex">
+        <div class="weui-flex__item" style="text-align: center; margin-top: 50px; margin-bottom: 50px">
+            <div class="placeholder">Status: <span id="status" class="weui-badge weui-badge_dot">Disabled</span></div>
+        </div>
+    </div>
+    <div class="weui-flex">
+        <div class="weui-flex__item">
+            <div class="button-sp-area">
+                <a href="#" class="weui-btn weui-btn_primary" data-interval="10">10s</a>
+                <a href="#" class="weui-btn weui-btn_primary" data-interval="20">20s</a>
+                <a href="#" class="weui-btn weui-btn_primary" data-interval="30">30s</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
