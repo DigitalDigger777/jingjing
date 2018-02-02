@@ -90,6 +90,5 @@ class ListenerController extends Controller
             return new Response('Device not found', 500);
         }
 
-        return new Response('Error', 500);
     }
 }
