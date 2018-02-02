@@ -80,6 +80,8 @@ class ListenerController extends Controller
 
                 if ($now > $timeEnd) {
                     return new Response('disable device', 204);
+                } else {
+                    return new Response('continue work ' . $now->format('Y/m/d H:i:s') . ' ' . $timeEnd->format('Y/m/d H:i:s'), 200);
                 }
             } else {
                 return new Response('Schedule not found', 500);
