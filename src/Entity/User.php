@@ -34,6 +34,11 @@ class User
     private $password;
 
     /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $token;
+
+    /**
      * @ORM\Column(type="string", length=100)
      */
     private $role;
@@ -45,7 +50,6 @@ class User
     {
         return $this->id;
     }
-
 
     /**
      * @return mixed
@@ -77,6 +81,22 @@ class User
     public function setPassword($password)
     {
         $this->password = $password;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getToken()
+    {
+        return $this->token;
+    }
+
+    /**
+     * @param mixed $token
+     */
+    public function setToken($token)
+    {
+        $this->token = $token;
     }
 
     /**

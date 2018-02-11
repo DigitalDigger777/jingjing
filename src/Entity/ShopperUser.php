@@ -9,12 +9,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ShopperUser extends User
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
 
     /**
      * @ORM\Column(type="string", length=100)
@@ -36,14 +30,15 @@ class ShopperUser extends User
      */
     private $cell;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true, name="is_deleted")
+     */
+    private $isDeleted;
 
     /**
-     * @return mixed
+     * @ORM\OneToMany(targetEntity="Statement", mappedBy="shopper")
      */
-    public function getId()
-    {
-        return $this->id;
-    }
+    private $statements;
 
     /**
      * @return mixed
@@ -115,5 +110,37 @@ class ShopperUser extends User
     public function setRole($role)
     {
         parent::setRole('ROLE_SHOPPER');
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIsDeleted()
+    {
+        return $this->isDeleted;
+    }
+
+    /**
+     * @param mixed $isDeleted
+     */
+    public function setIsDeleted($isDeleted)
+    {
+        $this->isDeleted = $isDeleted;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStatements()
+    {
+        return $this->statements;
+    }
+
+    /**
+     * @param mixed $statements
+     */
+    public function setStatements($statements)
+    {
+        $this->statements = $statements;
     }
 }

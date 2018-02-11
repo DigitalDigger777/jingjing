@@ -10,11 +10,9 @@ use Doctrine\ORM\Mapping as ORM;
 class ConsumerUser extends User
 {
     /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\OneToMany(targetEntity="Statement", mappedBy="consumer")
      */
-    private $id;
+    private $statements;
 
     /**
      * @param mixed $role
@@ -22,5 +20,21 @@ class ConsumerUser extends User
     public function setRole($role)
     {
         parent::setRole('ROLE_CONSUMER');
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStatements()
+    {
+        return $this->statements;
+    }
+
+    /**
+     * @param mixed $statements
+     */
+    public function setStatements($statements)
+    {
+        $this->statements = $statements;
     }
 }
