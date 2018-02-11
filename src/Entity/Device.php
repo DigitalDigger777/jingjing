@@ -27,7 +27,7 @@ class Device
     private $mac;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="integer", name="shopper_id", nullable=true)
      */
     private $shopperId;
 
@@ -35,6 +35,17 @@ class Device
      * @ORM\Column(type="boolean")
      */
     private $isEnable = false;
+
+    /**
+     * @ORM\Column(type="string", length=100)
+     */
+    private $room;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="ShopperUser", inversedBy="devices")
+     * @ORM\JoinColumn(name="shopper_id", referencedColumnName="id")
+     */
+    private $shopper;
 
     /**
      * @return mixed
@@ -114,5 +125,37 @@ class Device
     public function setIsEnable($isEnable)
     {
         $this->isEnable = $isEnable;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRoom()
+    {
+        return $this->room;
+    }
+
+    /**
+     * @param mixed $room
+     */
+    public function setRoom($room)
+    {
+        $this->room = $room;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getShopper()
+    {
+        return $this->shopper;
+    }
+
+    /**
+     * @param mixed $shopper
+     */
+    public function setShopper($shopper)
+    {
+        $this->shopper = $shopper;
     }
 }

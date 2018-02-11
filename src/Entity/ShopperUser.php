@@ -41,6 +41,11 @@ class ShopperUser extends User
     private $statements;
 
     /**
+     * @ORM\OneToMany(targetEntity="Device", mappedBy="shopper")
+     */
+    private $devices;
+
+    /**
      * @return mixed
      */
     public function getName()
@@ -142,5 +147,21 @@ class ShopperUser extends User
     public function setStatements($statements)
     {
         $this->statements = $statements;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDevices()
+    {
+        return $this->devices;
+    }
+
+    /**
+     * @param mixed $devices
+     */
+    public function setDevices($devices)
+    {
+        $this->devices = $devices;
     }
 }
