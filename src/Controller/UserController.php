@@ -108,6 +108,10 @@ class UserController extends AbstractController
                 break;
         }
 
+        if ($request->getMethod() == 'OPTIONS') {
+            $response = new Response();
+        }
+
         return $response;
     }
 
@@ -330,7 +334,7 @@ class UserController extends AbstractController
             $user->setRole(null);
         }
 
-        if ($password) {
+        if ($password && !empty($password)) {
             $user->setPassword(md5($password));
             $user->setToken(hash('sha256', $password));
         }

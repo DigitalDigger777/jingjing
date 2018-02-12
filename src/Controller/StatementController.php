@@ -3,19 +3,21 @@
 namespace App\Controller;
 
 use App\Entity\ShopperUser;
+use App\Entity\Statement;
+use Doctrine\ORM\Query;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class ShopperController extends AbstractController
+class StatementController extends AbstractController
 {
     /**
      * @param Request $request
      * @return JsonResponse
      *
-     * @Route("/shopper/load/{id}", name="jingjing_shopper_load")
+     * @Route("/statement/load/{id}", name="jingjing_statement_load")
      */
     public function load(Request $request)
     {
@@ -43,8 +45,7 @@ class ShopperController extends AbstractController
                 'name'      => $shopper->getName(),
                 'address'   => $shopper->getAddress(),
                 'contact'   => $shopper->getContact(),
-                'cell'      => $shopper->getCell(),
-                'email'     => $shopper->getEmail()
+                'cell'      => $shopper->getCell()
             ];
         }
 
@@ -53,9 +54,47 @@ class ShopperController extends AbstractController
 
     /**
      * @param Request $request
+     * @return JsonResponse
+     *
+     * @Route("/statement/items", name="jingjing_statement_items")
+     */
+    public function items(Request $request)
+    {
+        /**
+         * @var \Doctrine\ORM\EntityManager $em
+         */
+        $shopperId = $this->getRequestParameters($request, 'shopperId');
+        $consumerId = $this->getRequestParameters($request, 'consumerId');
+        $code = 200;
+
+        $em = $this->getDoctrine()->getManager();
+        $qb = $em->createQueryBuilder();
+        $qb->select('s, sh.name, DATE_FORMAT(s.date, \'%Y/%m/%d %H:%i\') as date')
+            ->from(Statement::class, 's')
+            ->join('s.shopper', 'sh')
+            ->join('s.consumer', 'c');
+
+        if ($shopperId) {
+            $qb->where($qb->expr()->eq('sh.id', ':shopperId'))
+                ->setParameter(':shopperId', $shopperId);
+        }
+
+        if ($consumerId) {
+            $qb->where($qb->expr()->eq('c.id', ':consumerId'))
+                ->setParameter(':consumerId', $consumerId);
+        }
+
+        $response = $qb->getQuery()
+            ->getResult(Query::HYDRATE_ARRAY);
+
+        return new JsonResponse($response, $code);
+    }
+
+    /**
+     * @param Request $request
      * @return JsonResponse|Response
      *
-     * @Route("/shopper/delete/{id}", name="jingjing_shopper_delete")
+     * @Route("/statement/delete/{id}", name="jingjing_statement_delete")
      */
     public function delete(Request $request)
     {
@@ -73,13 +112,13 @@ class ShopperController extends AbstractController
 
             $response = [
                 'error' => [
-                    'code' => '1003',
-                    'message' => 'Shopper is not defined'
+                    'code' => '1004',
+                    'message' => 'Statement is not defined'
                 ]
             ];
         } else {
             $response = [
-                'message' => 'Shopper delete successful'
+                'message' => 'Statement delete successful'
             ];
 
             $shopper->setIsDeleted(true);
