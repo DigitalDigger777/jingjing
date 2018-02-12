@@ -23,11 +23,13 @@ class DeviceController extends AbstractController
     {
         /**
          * @var \App\Entity\Device $device
+         * @var \Doctrine\ORM\EntityManager $em
          */
         $id = $this->getRequestParameters($request, 'id');
 
         $em = $this->getDoctrine()->getManager();
         $device = $em->getRepository(Device::class)->find($id);
+
         $code = 200;
 
         if (!$device) {
@@ -45,7 +47,9 @@ class DeviceController extends AbstractController
                 'name' => $device->getName(),
                 'mac' => $device->getMac(),
                 'is_enabled' => $device->getIsEnable(),
-                'shopperId' => $device->getShopperId()
+                'room' => $device->getRoom(),
+                'shopperId' => $device->getShopperId(),
+                'shopperName' => $device->getShopper()->getName()
             ];
         }
 
