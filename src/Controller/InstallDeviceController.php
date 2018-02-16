@@ -39,7 +39,7 @@ class InstallDeviceController extends Controller
             $device->setIsEnable(true);
             $device->setMac($mac);
             $device->setName('');
-
+            $device->setRoom('111');
             $em->persist($device);
             $em->flush();
         }
