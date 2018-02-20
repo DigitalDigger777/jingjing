@@ -6,6 +6,7 @@ use App\Entity\Device;
 use App\Entity\Schedule;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -50,7 +51,11 @@ class ListenerController extends Controller
             $em->persist($schedule);
             $em->flush();
 
-            return new Response('add schedule and enable device', 200);
+            return new JsonResponse([
+                'message'   => 'add schedule and enable device',
+                'timeStart' => $timeStart->format('Y/m/d  H:i'),
+                'timeEnd'   => $timeEnd->format('Y/m/d  H:i')
+            ]);
         } else {
             return new Response('device not found', 500);
         }
