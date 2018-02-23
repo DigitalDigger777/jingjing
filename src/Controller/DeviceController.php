@@ -43,13 +43,13 @@ class DeviceController extends AbstractController
             ];
         } else {
             $response = [
-                'id' => $device->getId(),
-                'name' => $device->getName(),
-                'mac' => $device->getMac(),
-                'is_enabled' => $device->getIsEnable(),
-                'room' => $device->getRoom(),
-                'shopperId' => $device->getShopperId(),
-                'shopperName' => $device->getShopper()->getName()
+                'id'            => $device->getId(),
+                'name'          => $device->getName(),
+                'mac'           => $device->getMac(),
+                'is_enabled'    => $device->getIsEnable(),
+                'room'          => $device->getRoom(),
+                'shopperId'     => $device->getShopperId(),
+                'shopperName'   => $device->getShopper() ? $device->getShopper()->getName() : ''
             ];
         }
 
