@@ -33,17 +33,28 @@ class InstallDeviceController extends Controller
             'mac' => $mac
         ]);
 
+        $code = 200;
+
         if (!$device) {
-            $device = new Device();
-            $device->setShopperId(null);
-            $device->setIsEnable(true);
-            $device->setMac($mac);
-            $device->setName('');
-            $device->setRoom('111');
-            $em->persist($device);
-            $em->flush();
+            try {
+                $device = new Device();
+                $device->setShopperId(null);
+                $device->setIsEnable(true);
+                $device->setMac($mac);
+                $device->setName('');
+                $device->setRoom('111');
+                $em->persist($device);
+                $em->flush();
+                $code = 201;
+                $message = 'Save Successful';
+            } catch (\Exception $e) {
+                $code = 500;
+                $message = $e->getMessage();
+            }
+        } else {
+            $message = 'DB have device';
         }
 
-        return new Response('Save Successful', 200);
+        return new Response($message, $code);
     }
 }
