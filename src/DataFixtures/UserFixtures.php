@@ -16,6 +16,10 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
+/**
+ * Class UserFixtures
+ * @package App\DataFixtures
+ */
 class UserFixtures extends Fixture implements OrderedFixtureInterface
 {
     /**
@@ -50,7 +54,7 @@ class UserFixtures extends Fixture implements OrderedFixtureInterface
     {
         $user = new ConsumerUser();
         $user->setEmail('consumer@test.com');
-        $user->setPassword(md5('1demo!'));
+        $user->setPassword(md5('2demo!'));
         $user->setRole(null);
         $user->setToken(hash('sha256', '1demo!'));
 
@@ -65,7 +69,7 @@ class UserFixtures extends Fixture implements OrderedFixtureInterface
     {
         $user = new ShopperUser();
         $user->setEmail('shopper@test.com');
-        $user->setPassword(md5('1demo!'));
+        $user->setPassword(md5('3demo!'));
         $user->setName('ABC Shopper');
         $user->setAddress('Test address');
         $user->setCell('+380991576192');
