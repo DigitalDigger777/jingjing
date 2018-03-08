@@ -26,11 +26,11 @@ class SmsController extends Controller
 //        print($sid);
 //        print($token);
 
-        $h = fopen('uploads/twillio.txt', 'a+');
-        fwrite($h, $sid . "\n");
-        fwrite($h, $token . "\n");
-        fwrite($h, print_r($request->request->all(), true));
-        fclose($h);
+//        $h = fopen('uploads/twillio.txt', 'a+');
+//        fwrite($h, $sid . "\n");
+//        fwrite($h, $token . "\n");
+//        fwrite($h, print_r($request->request->all(), true));
+//        fclose($h);
 
 //        return new Response();
         $client = new Client($sid, $token);
