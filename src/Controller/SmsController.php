@@ -38,7 +38,7 @@ class SmsController extends Controller
             $request->request->get('From'),
             [
                 'from' => $request->request->get('To'),
-                'body' => 'https://xin.jjpanda.com/consumer/buy-time-slots/' . $request->request->get('Body')
+                'body' => 'http://xin.jjpanda.com/consumer/buy-time-slots/' . $request->request->get('Body')
             ]
         );
 
