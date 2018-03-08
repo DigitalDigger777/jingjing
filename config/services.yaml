@@ -2,6 +2,8 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: 'en'
+    twillio_sid: ACf1fb93ae850a81938ff603849d0b56c6
+    twillio_auth_token: 542aa354d99fb249f725d28903f86b3b
 
 services:
     # default configuration for services in *this* file
