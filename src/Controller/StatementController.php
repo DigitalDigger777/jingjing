@@ -72,7 +72,7 @@ class StatementController extends AbstractController
         $qb->select('s, sh.name, DATE_FORMAT(s.date, \'%Y/%m/%d %H:%i\') as date')
             ->from(Statement::class, 's')
             ->join('s.shopper', 'sh')
-            ->join('s.consumer', 'c');
+            ->leftJoin('s.consumer', 'c');
 
         if ($shopperId) {
             $qb->where($qb->expr()->eq('sh.id', ':shopperId'))
@@ -83,7 +83,8 @@ class StatementController extends AbstractController
             $qb->where($qb->expr()->eq('c.id', ':consumerId'))
                 ->setParameter(':consumerId', $consumerId);
         }
-
+        
+        $qb->orderBy('c.id', 'DESC');
         $response = $qb->getQuery()
             ->getResult(Query::HYDRATE_ARRAY);
 
