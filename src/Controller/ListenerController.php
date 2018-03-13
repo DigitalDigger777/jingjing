@@ -54,10 +54,14 @@ class ListenerController extends Controller
             $room = $device->getRoom();
             $shopper = $device->getShopper();
 
+            //amount for 1 hour
+            $amount = 3;
+            $hours = 1/(60/($interval/60));
+
             $statement = new Statement();
             $statement->setRoom($room);
             $statement->setShopper($shopper);
-            $statement->setAmount('3.99');
+            $statement->setAmount($amount * $hours);
             //$statement->setConsumer()
             $statement->setDate(new \DateTime());
             $statement->setHours(1/(60/($interval/60)));
