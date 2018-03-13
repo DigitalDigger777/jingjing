@@ -72,7 +72,7 @@ class StatementController extends AbstractController
         $qb->select('s, sh.name, DATE_FORMAT(s.date, \'%Y/%m/%d %H:%i\') as date')
             ->from(Statement::class, 's')
             ->join('s.shopper', 'sh')
-            ->join('s.consumer', 'c');
+            ->leftJoin('s.consumer', 'c');
 
         if ($shopperId) {
             $qb->where($qb->expr()->eq('sh.id', ':shopperId'))
