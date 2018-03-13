@@ -83,6 +83,8 @@ class StatementController extends AbstractController
             $qb->where($qb->expr()->eq('c.id', ':consumerId'))
                 ->setParameter(':consumerId', $consumerId);
         }
+        
+        $qb->orderBy('s.id', 'DESC');
 
         $response = $qb->getQuery()
             ->getResult(Query::HYDRATE_ARRAY);
