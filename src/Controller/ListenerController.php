@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Device;
 use App\Entity\Schedule;
+use App\Entity\Statement;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -49,6 +50,20 @@ class ListenerController extends Controller
             $schedule->setTimeEnd($timeEnd);
 
             $em->persist($schedule);
+            $em->flush();
+            $room = $device->getRoom();
+            $shopper = $device->getShopper();
+
+            $statement = new Statement();
+            $statement->setRoom($room);
+            $statement->setShopper($shopper);
+            $statement->setAmount('3.99');
+            //$statement->setConsumer()
+            $statement->setDate(new \DateTime());
+            $statement->setHours(1/(60/($interval/60)));
+            $statement->setRate('3.99');
+
+            $em->persist($statement);
             $em->flush();
 
             return new JsonResponse([
