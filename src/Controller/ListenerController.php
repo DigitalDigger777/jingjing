@@ -56,7 +56,7 @@ class ListenerController extends Controller
 
             //amount for 1 hour
             $amount = 3;
-            $hours = 1/(60/($interval/60));
+            $hours = ($interval/60)/60;
 
             $statement = new Statement();
             $statement->setRoom($room);
