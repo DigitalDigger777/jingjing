@@ -65,7 +65,7 @@ class ListenerController extends Controller
             //$statement->setConsumer()
             $statement->setDate(new \DateTime());
             $statement->setHours(1/(60/($interval/60)));
-            $statement->setRate('3.99');
+            $statement->setRate('3');
 
             $em->persist($statement);
             $em->flush();
