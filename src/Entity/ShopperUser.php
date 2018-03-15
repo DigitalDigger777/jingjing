@@ -31,6 +31,11 @@ class ShopperUser extends User
     private $cell;
 
     /**
+     * @ORM\Column(type="float")
+     */
+    private $rate;
+
+    /**
      * @ORM\Column(type="boolean", nullable=true, name="is_deleted")
      */
     private $isDeleted;
@@ -107,6 +112,22 @@ class ShopperUser extends User
     public function setCell($cell)
     {
         $this->cell = $cell;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRate()
+    {
+        return $this->rate;
+    }
+
+    /**
+     * @param mixed $rate
+     */
+    public function setRate($rate)
+    {
+        $this->rate = $rate;
     }
 
     /**

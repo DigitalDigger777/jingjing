@@ -42,6 +42,11 @@ class Device
     private $room;
 
     /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $dateAdd;
+
+    /**
      * @ORM\ManyToOne(targetEntity="ShopperUser", inversedBy="devices")
      * @ORM\JoinColumn(name="shopper_id", referencedColumnName="id")
      */
@@ -157,5 +162,21 @@ class Device
     public function setShopper($shopper)
     {
         $this->shopper = $shopper;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDateAdd()
+    {
+        return $this->dateAdd;
+    }
+
+    /**
+     * @param mixed $dateAdd
+     */
+    public function setDateAdd($dateAdd)
+    {
+        $this->dateAdd = $dateAdd;
     }
 }

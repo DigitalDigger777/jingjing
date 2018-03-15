@@ -43,6 +43,7 @@ class DeviceFixtures extends Fixture implements OrderedFixtureInterface
         $device->setMac('EC:FA:BC:'. rand(0, 9) .'5:'. rand(0, 9) .'C:'. rand(0, 9) .'F');
         $device->setName('Massage ' . rand(1000,9999));
         $device->setRoom('Room ' . rand(1, 50));
+        $device->setDateAdd(new \DateTime());
         $device->setShopperId($shopper->getId());
 
         $manager->persist($device);

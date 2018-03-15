@@ -74,6 +74,7 @@ class UserFixtures extends Fixture implements OrderedFixtureInterface
         $user->setAddress('Test address');
         $user->setCell('+380991576192');
         $user->setContact('John Doe');
+        $user->setRate(rand(2, 8));
         $user->setRole(null);
         $user->setToken(hash('sha256', '1demo!'));
 

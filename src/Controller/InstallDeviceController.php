@@ -43,6 +43,7 @@ class InstallDeviceController extends Controller
                 $device->setMac($mac);
                 $device->setName('');
                 $device->setRoom('111');
+                $device->setDateAdd(new \DateTime());
                 $em->persist($device);
                 $em->flush();
                 $code = 201;

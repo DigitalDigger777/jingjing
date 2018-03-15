@@ -72,7 +72,7 @@ class DeviceController extends AbstractController
 
         $em = $this->getDoctrine()->getManager();
         $qb = $em->createQueryBuilder();
-        $qb->select('d')
+        $qb->select('d as device, DATE_FORMAT(d.dateAdd, \'%Y/%m/%d %H:%i\') as date')
                 ->from(Device::class, 'd');
 
         if ($shopperId) {

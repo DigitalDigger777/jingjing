@@ -41,36 +41,37 @@ class UserController extends AbstractController
         $method = $request->getMethod();
         $response = null;
 
-        $em = $this->getDoctrine()->getManager();
-        $user = $em->getRepository(User::class)->findOneBy([
-            'email'     => $email,
-            'password'  => md5($password)
-        ]);
+        if ($email && $password) {
+            $em = $this->getDoctrine()->getManager();
+            $user = $em->getRepository(User::class)->findOneBy([
+                'email' => $email,
+                'password' => md5($password)
+            ]);
 
-        if ($user) {
-            $data = [
-                'id'   => $user->getId(),
-                'role' => $user->getRole(),
-                'token' => $user->getToken()
-            ];
-            $code = 200;
-        } else {
-            $data = [
-                'error' => [
-                    'code'      => '1000',
-                    'message'   => 'User not found'
-                ]
-            ];
-            $code = 500;
+
+            if ($user) {
+                $data = [
+                    'id'   => $user->getId(),
+                    'role' => $user->getRole(),
+                    'token' => $user->getToken()
+                ];
+                $code = 200;
+            } else {
+                $data = [
+                    'error' => [
+                        'code'      => '1000',
+                        'message'   => 'User not found'
+                    ]
+                ];
+                $code = 500;
+            }
+
+            $response = new JsonResponse($data, $code);
         }
 
         if ($method == 'OPTIONS') {
 
             $response = new Response();
-
-        } else {
-
-            $response = new JsonResponse($data, $code);
 
         }
 
@@ -220,17 +221,22 @@ class UserController extends AbstractController
         if (isset($class)) {
             $em = $this->getDoctrine()->getManager();
             $qb = $em->createQueryBuilder();
-            $items = $qb->select('u')
-                        ->from($class, 'u')
-                        ->where(
-                            $qb->expr()->orX(
-                                $qb->expr()->isNull('u.isDeleted'),
-                                $qb->expr()->eq('u.isDeleted', ':is_deleted')
-                            )
-                        )
-                        ->setParameter(':is_deleted', false)
-                        ->getQuery()
-                        ->getResult(Query::HYDRATE_ARRAY);
+            $qb->select('u, d')
+                        ->from($class, 'u');
+
+            if ($role == 'ROLE_SHOPPER') {
+                $qb->leftJoin('u.devices', 'd');
+            }
+
+            $qb->where(
+                    $qb->expr()->orX(
+                        $qb->expr()->isNull('u.isDeleted'),
+                        $qb->expr()->eq('u.isDeleted', ':is_deleted')
+                    )
+                )
+                ->setParameter(':is_deleted', false);
+
+            $items = $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
 
             $response = $items;
         } else {
@@ -353,12 +359,13 @@ class UserController extends AbstractController
     {
         $id       = $this->getRequestParameters($request, 'id');
         $email    = $this->getRequestParameters($request, 'email');
-        $password = $this->getRequestParameters($request, 'password');
+        $password = $this->findShopperPin();
 
         $name       = $this->getRequestParameters($request, 'name');
         $address    = $this->getRequestParameters($request, 'address');
         $contact    = $this->getRequestParameters($request, 'contact');
         $cell       = $this->getRequestParameters($request, 'cell');
+        $rate       = $this->getRequestParameters($request, 'rate');
 
 
         $em = $this->getDoctrine()->getManager();
@@ -404,15 +411,47 @@ class UserController extends AbstractController
             $user->setCell($cell);
         }
 
+        if ($rate) {
+            $user->setRate($rate);
+        }
+
         if (!isset($data['error'])) {
             $em->persist($user);
             $em->flush();
 
+            //send email
             $data = [
                 'message' => 'Shopper save successful'
             ];
         }
 
         return new JsonResponse($data, $code);
+    }
+
+    private function findShopperPin()
+    {
+        $chars = "1234567890qwertyuiopasdfghjklzxcvbnm!@#";
+        $pass = '';
+        $protectIterator = 0;
+
+        while (true) {
+            for ($i = 0; $i < 6; $i++) {
+                $index = rand(0, strlen($chars) - 1);
+                $pass .= $chars[$index];
+            }
+
+            $em = $this->getDoctrine()->getManager();
+            $shopper = $em->getRepository(ShopperUser::class)->findBy([
+                'password' => md5($pass)
+            ]);
+
+            if (!$shopper) {
+                return md5($pass);
+            }
+            $protectIterator++;
+            if ($protectIterator > 0) {
+                throw new \Exception('Very strange coincidence of random passwords');
+            }
+        }
     }
 }
