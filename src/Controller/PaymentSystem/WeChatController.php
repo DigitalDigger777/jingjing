@@ -194,7 +194,6 @@ class WeChatController extends AbstractController
         $payload = [
             'appid'             => 'wx11912106637f6d34',
             'mch_id'            => '1499026472',
-            'sub_mch_id'        => '1499026472',
             'nonce_str'         => 'XvOVjONj1ml0ODjn',
             'body'              => 'test body - 测试',
             'out_trade_no'      => time(),
