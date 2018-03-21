@@ -194,14 +194,14 @@ class WeChatController extends AbstractController
         $payload = [
             'appid'             => 'wx11912106637f6d34',
             'mch_id'            => '1499026472',
+            'sub_mch_id'        => '1499026472',
             'nonce_str'         => 'XvOVjONj1ml0ODjn',
-            'notify_url'        => 'http://yanda.net.cn/notify.php',
-            'trade_type'        => 'JSAPI',
-            'spbill_create_ip'  => $_SERVER['REMOTE_ADDR'],
+            'body'              => 'test body - 测试',
             'out_trade_no'      => time(),
             'total_fee'         => '1',
-            'body'              => 'test body - 测试',
-            'openid'            => 'onkVf1FjWS5SBIixxxxxxx'
+            'spbill_create_ip'  => $_SERVER['REMOTE_ADDR'],
+            'notify_url'        => 'http://yanda.net.cn/notify.php',
+            'trade_type'        => 'MWEB'
         ];
 
         $payload['sign'] = $this->getSignature($payload);
@@ -224,9 +224,7 @@ class WeChatController extends AbstractController
         } else {
             throw new \Exception('Status code: ' . $response->getStatusCode());
         }
-        echo '<pre>';
-        echo $endpoint;
-        print_r($payload); exit;
+
         return Support::requestApi($endpoint, $payload, $this->config->get('key'));
     }
 }
