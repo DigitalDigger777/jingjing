@@ -23,7 +23,8 @@
         "symfony/validator": "^4.0",
         "symfony/web-link": "^4.0",
         "symfony/webpack-encore-pack": "*",
-        "symfony/yaml": "^4.0"
+        "symfony/yaml": "^4.0",
+        "yansongda/pay": "dev-master"
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^3.0",
@@ -76,5 +77,11 @@
             "id": "01C59NT4ZFMY9TJTNKNR6YMQN6",
             "allow-contrib": false
         }
-    }
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/kormanyuri/pay"
+        }
+    ]
 }
