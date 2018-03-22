@@ -26,7 +26,7 @@ class WeChatController extends AbstractController
         'app_id'          => 'wx0c25d154feebb196', // 公众号 APPID
         'miniapp_id'      => 'wx0c25d154feebb196', // 小程序 APPID
         'mch_id'          => '1225312702',
-        'key'             => 'FEAA9837085EC53680F04AE0808A212B',
+        'key'             => 'feaa9837085ec53680f04ae0808a212b',
         'sandbox_signkey' => '7304453353771B330AAD23BB6A667687',
         'notify_url'    => 'http://yanda.net.cn/notify.php',
         'cert_client' => './cert/apiclient_cert.pem', // optional，退款等情况时用到
@@ -141,7 +141,17 @@ class WeChatController extends AbstractController
     private function getSignature($data)
     {
         ksort($data);
-        return strtoupper(md5(http_build_query($data)));
+        $stringA = '';
+        foreach ($data as $key => $item) {
+            if ($stringA == '') {
+                $stringA .= $key . '=' . $item;
+            } else {
+                $stringA .= '&' . $key . '=' . $item;
+            }
+        }
+        $stringA = $stringA . "&key=" . $this->config['key'];
+
+        return strtoupper(md5($stringA));
     }
 
     private function toXml($data): string
@@ -194,12 +204,12 @@ class WeChatController extends AbstractController
         $payload = [
             'appid'             => 'wx11912106637f6d34',
             'mch_id'            => '1499026472',
-            'nonce_str'         => 'XvOVjONj1ml0ODjn',
+            'nonce_str'         => Str::random(),
             'body'              => 'test body - 测试',
             'out_trade_no'      => time(),
             'total_fee'         => '1',
             'spbill_create_ip'  => $_SERVER['REMOTE_ADDR'],
-            'notify_url'        => 'http://yanda.net.cn/notify.php',
+            'notify_url'        => 'http://jingjing.fenglinfl.com/payment/wechat/notify',
             'trade_type'        => 'MWEB'
         ];
 
@@ -217,8 +227,8 @@ class WeChatController extends AbstractController
         //Log::debug('Pre Order:', [$endpoint, $payload]);
         if ($response->getStatusCode() == 200) {
             $res = $this->fromXml($response->getBody()->getContents());
-            print_r($res);
-            exit;
+
+            return $this->redirect($res['mweb_url']);
             //return strtoupper($this->fromXml($response->getBody()->getContents())['sandbox_signkey']);
         } else {
             throw new \Exception('Status code: ' . $response->getStatusCode());
