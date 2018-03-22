@@ -56,7 +56,7 @@ class WeChatController extends AbstractController
 //        $this->config['key'] = $this->config['sandbox_signkey'];
         //print_r($this->config);
 
-        $this->preOrder();
+        return $this->preOrder();
         //$pay = Pay::wechat($this->config)->mp($order);
 
         // $pay->appId
@@ -233,7 +233,5 @@ class WeChatController extends AbstractController
         } else {
             throw new \Exception('Status code: ' . $response->getStatusCode());
         }
-
-        return Support::requestApi($endpoint, $payload, $this->config->get('key'));
     }
 }
