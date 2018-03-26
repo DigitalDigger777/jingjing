@@ -229,9 +229,9 @@ class WeChatController extends AbstractController
         if ($response->getStatusCode() == 200) {
             $res = $this->fromXml($response->getBody()->getContents());
 
-//            echo '<pre>';
-//            print_r($res);
-//            exit;
+            echo '<pre>';
+            print_r($res);
+            exit;
             $redirectResponse = new RedirectResponse($res['mweb_url']);
             $redirectResponse->headers->set('Referer', 'http://jingjing.fenglinfl.com');
             return $redirectResponse;
