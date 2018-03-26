@@ -10,6 +10,7 @@ use GuzzleHttp\Client;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Yansongda\Pay\Gateways\Alipay;
@@ -228,7 +229,12 @@ class WeChatController extends AbstractController
         if ($response->getStatusCode() == 200) {
             $res = $this->fromXml($response->getBody()->getContents());
 
-            return $this->redirect($res['mweb_url']);
+//            echo '<pre>';
+//            print_r($res);
+//            exit;
+            $redirectResponse = new RedirectResponse($res['mweb_url']);
+            $redirectResponse->headers->set('Referer', 'http://jingjing.fenglinfl.com');
+            return $redirectResponse;
             //return strtoupper($this->fromXml($response->getBody()->getContents())['sandbox_signkey']);
         } else {
             throw new \Exception('Status code: ' . $response->getStatusCode());
