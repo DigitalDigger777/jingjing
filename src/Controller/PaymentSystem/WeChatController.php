@@ -235,7 +235,7 @@ class WeChatController extends AbstractController
             'out_trade_no'      => time(),
             'total_fee'         => $amount,
             'spbill_create_ip'  => $_SERVER['REMOTE_ADDR'],
-            'notify_url'        => 'http://jingjing.fenglinfl.com/payment/wechat/notify',
+            'notify_url'        => 'http://jingjing.fenglinfl.com/public/index.php/payment/wechat/notify',
             'trade_type'        => 'MWEB'
         ];
 
