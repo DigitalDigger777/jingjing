@@ -211,7 +211,7 @@ class WeChatController extends AbstractController
             'total_fee'         => '1',
             'spbill_create_ip'  => $_SERVER['REMOTE_ADDR'],
             'notify_url'        => 'http://jingjing.fenglinfl.com/payment/wechat/notify',
-            'trade_type'        => 'JSAPI'
+            'trade_type'        => 'MWEB'
         ];
 
         $payload['sign'] = $this->getSignature($payload);
@@ -229,9 +229,9 @@ class WeChatController extends AbstractController
         if ($response->getStatusCode() == 200) {
             $res = $this->fromXml($response->getBody()->getContents());
 
-            echo '<pre>';
-            print_r($res);
-            exit;
+//            echo '<pre>';
+//            print_r($res);
+//            exit;
             $redirectResponse = new RedirectResponse($res['mweb_url']);
             $redirectResponse->headers->set('Referer', 'http://jingjing.fenglinfl.com');
             return $redirectResponse;
