@@ -41,26 +41,30 @@ class WeChatController extends AbstractController
 
     /**
      * @param Request $request
-     * @return JsonResponse
+     * @return Response
      *
      * @Route("/payment/wechat/send", name="jingjing_payment_wechat_send")
      */
     public function index(Request $request)
     {
-        $order = [
-            'out_trade_no'  => time(),
-            'total_fee'     => '1', // **单位：分**
-            'body'          => 'test body - 测试',
-            'openid'        => 'onkVf1FjWS5SBIixxxxxxx',
-        ];
+//        $order = [
+//            'out_trade_no'  => time(),
+//            'total_fee'     => '1', // **单位：分**
+//            'body'          => 'test body - 测试',
+//            'openid'        => 'onkVf1FjWS5SBIixxxxxxx',
+//        ];
 
 //        $this->config['key'] = $this->config['sandbox_signkey'];
         //print_r($this->config);
 
-        $mwebUrl = $this->preOrder();
+        $amount = $request->query->get('amount');
+        $mac = $request->query->get('mac');
+        $interval = $request->query->get('interval');
+
+        $mwebUrl = $this->preOrder($amount);
 
         return $this->render('mweb.html.twig', [
-            'mwebUrl' => $mwebUrl
+            'mwebUrl' => $mwebUrl . '&redirect_url=' . urlencode('http://jingjing.fenglinfl.com/consumer/buy-time-confirmation-select-slot/' . $mac . '/' . $interval . '/' . $amount)
         ]);
         //$pay = Pay::wechat($this->config)->mp($order);
 
@@ -136,7 +140,6 @@ class WeChatController extends AbstractController
     }
 
 
-
     /**
      * Create signature
      *
@@ -159,6 +162,10 @@ class WeChatController extends AbstractController
         return strtoupper(md5($stringA));
     }
 
+    /**
+     * @param $data
+     * @return string
+     */
     private function toXml($data): string
     {
         $xml = '<xml>';
@@ -171,6 +178,10 @@ class WeChatController extends AbstractController
         return $xml;
     }
 
+    /**
+     * @param $xml
+     * @return array
+     */
     public function fromXml($xml): array
     {
         libxml_disable_entity_loader(true);
@@ -178,6 +189,11 @@ class WeChatController extends AbstractController
         return json_decode(json_encode(simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA), JSON_UNESCAPED_UNICODE), true);
     }
 
+    /**
+     * @param $config
+     * @return string
+     * @throws \Exception
+     */
     private function getSandboxSignKey($config)
     {
         $client = new Client();
@@ -204,7 +220,12 @@ class WeChatController extends AbstractController
 
     }
 
-    private function preOrder()
+    /**
+     * @param $amount
+     * @return mixed
+     * @throws \Exception
+     */
+    private function preOrder($amount)
     {
         $payload = [
             'appid'             => 'wx11912106637f6d34',
@@ -212,7 +233,7 @@ class WeChatController extends AbstractController
             'nonce_str'         => Str::random(),
             'body'              => 'test body - 测试',
             'out_trade_no'      => time(),
-            'total_fee'         => '1',
+            'total_fee'         => $amount,
             'spbill_create_ip'  => $_SERVER['REMOTE_ADDR'],
             'notify_url'        => 'http://jingjing.fenglinfl.com/payment/wechat/notify',
             'trade_type'        => 'MWEB'
@@ -239,7 +260,6 @@ class WeChatController extends AbstractController
 //            $redirectResponse = new RedirectResponse($res['mweb_url']);
 //            $redirectResponse->headers->set('Referer', 'http://jingjing.fenglinfl.com');
             return $res['mweb_url'];
-            //return strtoupper($this->fromXml($response->getBody()->getContents())['sandbox_signkey']);
         } else {
             throw new \Exception('Status code: ' . $response->getStatusCode());
         }
