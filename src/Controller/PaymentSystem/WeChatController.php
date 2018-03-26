@@ -211,7 +211,7 @@ class WeChatController extends AbstractController
             'total_fee'         => '1',
             'spbill_create_ip'  => $_SERVER['REMOTE_ADDR'],
             'notify_url'        => 'http://jingjing.fenglinfl.com/payment/wechat/notify',
-            'trade_type'        => 'MWEB'
+            'trade_type'        => 'JSAPI'
         ];
 
         $payload['sign'] = $this->getSignature($payload);
