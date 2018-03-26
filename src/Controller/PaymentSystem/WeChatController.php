@@ -57,7 +57,11 @@ class WeChatController extends AbstractController
 //        $this->config['key'] = $this->config['sandbox_signkey'];
         //print_r($this->config);
 
-        return $this->preOrder();
+        $mwebUrl = $this->preOrder();
+
+        return $this->render('mweb.html.twig', [
+            'mwebUrl' => $mwebUrl
+        ]);
         //$pay = Pay::wechat($this->config)->mp($order);
 
         // $pay->appId
@@ -232,9 +236,9 @@ class WeChatController extends AbstractController
 //            echo '<pre>';
 //            print_r($res);
 //            exit;
-            $redirectResponse = new RedirectResponse($res['mweb_url']);
-            $redirectResponse->headers->set('Referer', 'http://jingjing.fenglinfl.com');
-            return $redirectResponse;
+//            $redirectResponse = new RedirectResponse($res['mweb_url']);
+//            $redirectResponse->headers->set('Referer', 'http://jingjing.fenglinfl.com');
+            return $res['mweb_url'];
             //return strtoupper($this->fromXml($response->getBody()->getContents())['sandbox_signkey']);
         } else {
             throw new \Exception('Status code: ' . $response->getStatusCode());
