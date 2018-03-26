@@ -83,9 +83,16 @@ class WeChatController extends AbstractController
      */
     public function notify(Request $request)
     {
+        $post = $request->request->all();
+        $query = $request->query->all();
+
+        $h = fopen('log.txt', 'a+');
+        fwrite($h, print_r($post, true) . print_r($query, true));
+        fclose($h);
         $pay = Pay::wechat($this->config);
 
         try{
+
             $data = $pay->verify(); // 是的，验签就这么简单！
 
             Log::debug('Wechat notify', $data->all());
