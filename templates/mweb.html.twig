@@ -1,12 +1,19 @@
 {% extends 'base.html.twig' %}
 
 {% block stylesheets %}
-    <script>
-        alert({{ mwebUrl }});
-        //window.location = "{{ mwebUrl }}";
-    </script>
+
 {% endblock %}
 {% block body %}
-
+    <p id="url"></p>
     {#<a href="{{ mwebUrl }}">Pay</a>#}
+    <script>
+        //alert({{ mwebUrl }});
+        var el = document.getElementById('url');
+        el.innerHTML = "{{ mwebUrl }}";
+
+        setTimeout(function () {
+            window.location = "{{ mwebUrl }}";
+        }, 5000);
+        //window.location = "{{ mwebUrl }}";
+    </script>
 {% endblock %}
