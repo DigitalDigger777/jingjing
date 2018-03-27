@@ -63,7 +63,7 @@ class WeChatController extends AbstractController
 
         $mwebUrl = $this->preOrder($amount);
 
-        $redirectUrl = 'http://jingjing.fenglinfl.com?mac=' . $mac . '&interval=' . $interval . '&amount=' . $amount;
+        $redirectUrl = 'http://jingjing.fenglinfl.com/consumer/buy-time-confirmation-select-slot/' . $mac . '/' . $interval . '/' . $amount;
         //$redirectUrl = str_replace('.', '_', $redirectUrl);
 
 //        return $this->render('mweb.html.twig', [
@@ -76,7 +76,6 @@ class WeChatController extends AbstractController
         // $pay->nonceStr
         // $pay->package
         // $pay->signType
-
         return new JsonResponse([
             'mwebUrl' => $mwebUrl . '&redirect_url=' . urlencode($redirectUrl)
         ]);
