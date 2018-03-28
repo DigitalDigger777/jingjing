@@ -46,6 +46,23 @@ class WeChatCallbackController extends AbstractController
     }
 
     /**
+     * @param Request $request
+     * @return Response
+     *
+     * @Route("/payment/wechat/error", name="jingjing_payment_wechat_error")
+     */
+    public function error(Request $request)
+    {
+        $post = $request->request->all();
+        $get = $request->query->all();
+
+        return new JsonResponse([
+            'post' => $post,
+            'get' => $get
+        ]);
+    }
+
+    /**
      * @param $id
      * @param $interval
      * @return JsonResponse|Response
