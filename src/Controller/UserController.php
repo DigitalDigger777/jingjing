@@ -11,6 +11,7 @@ namespace App\Controller;
 use App\Entity\AdminUser;
 use App\Entity\ConsumerUser;
 use App\Entity\ShopperUser;
+use App\Entity\TesterUser;
 use App\Entity\User;
 use Doctrine\ORM\Query;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -39,30 +40,34 @@ class UserController extends AbstractController
         $password   = $this->getRequestParameters($request, 'password');
 
         $method = $request->getMethod();
+
         $response = null;
 
-        $em = $this->getDoctrine()->getManager();
-        $user = $em->getRepository(User::class)->findOneBy([
-            'email'     => $email,
-            'password'  => md5($password)
-        ]);
+        if ($method != 'OPTIONS') {
+            $em = $this->getDoctrine()->getManager();
+            $user = $em->getRepository(User::class)->findOneBy([
+                'email' => $email,
+                'password' => md5($password)
+            ]);
 
-        if ($user) {
-            $data = [
-                'id'   => $user->getId(),
-                'role' => $user->getRole(),
-                'token' => $user->getToken()
-            ];
-            $code = 200;
-        } else {
-            $data = [
-                'error' => [
-                    'code'      => '1000',
-                    'message'   => 'User not found'
-                ]
-            ];
-            $code = 500;
+            if ($user) {
+                $data = [
+                    'id' => $user->getId(),
+                    'role' => $user->getRole(),
+                    'token' => $user->getToken()
+                ];
+                $code = 200;
+            } else {
+                $data = [
+                    'error' => [
+                        'code' => '1000',
+                        'message' => 'User not found'
+                    ]
+                ];
+                $code = 500;
+            }
         }
+
 
         if ($method == 'OPTIONS') {
 
@@ -146,6 +151,9 @@ class UserController extends AbstractController
             case 'ROLE_SHOPPER':
                     $response = $this->saveShopper($request);
                 break;
+            case 'ROLE_TESTER':
+                    $response = $this->saveTester($request);
+                break;
             default:
                     $response = new JsonResponse([
                         'error' => [
@@ -213,6 +221,9 @@ class UserController extends AbstractController
                 break;
             case 'ROLE_SHOPPER':
                     $class = ShopperUser::class;
+                break;
+            case 'ROLE_TESTER':
+                    $class = TesterUser::class;
                 break;
         }
 
@@ -409,6 +420,75 @@ class UserController extends AbstractController
 
             $data = [
                 'message' => 'Shopper save successful'
+            ];
+        }
+
+        return new JsonResponse($data, $code);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    private function saveTester(Request $request)
+    {
+        $id         = $this->getRequestParameters($request, 'id');
+        $name       = $this->getRequestParameters($request, 'name');
+        $cell       = $this->getRequestParameters($request, 'cell');
+        $pin        = $this->getRequestParameters($request, 'pin');
+        $password   = $this->getRequestParameters($request, 'pin');
+        $email      = $pin . '@test.com';
+
+        $em = $this->getDoctrine()->getManager();
+        $data = [];
+        $code = 200;
+
+        if ($id) {
+            $user = $em->getRepository(TesterUser::class)->find($id);
+
+            if (!$user) {
+                $data = [
+                    'error' => [
+                        'code' => '1000',
+                        'message' => 'user with #' . $id . ' not found'
+                    ]
+                ];
+                $code = 500;
+            }
+        } else {
+            $user = new TesterUser();
+            $user->setRole(null);
+        }
+
+
+        if ($name) {
+            $user->setName($name);
+        }
+
+        if ($cell) {
+            $user->setCell($cell);
+        }
+
+        if ($pin) {
+            $user->setPin($pin);
+        }
+
+
+        if ($email) {
+            $user->setEmail($email);
+        }
+
+        if ($password && !empty($password)) {
+            $user->setPassword(md5($password));
+            $user->setToken(hash('sha256', $password));
+        }
+
+        if (!isset($data['error'])) {
+            $em->persist($user);
+            $em->flush();
+
+            $data = [
+                'message' => 'Tester save successful'
             ];
         }
 

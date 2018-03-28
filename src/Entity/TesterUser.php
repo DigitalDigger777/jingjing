@@ -26,6 +26,11 @@ class TesterUser extends User
     private $pin;
 
     /**
+     * @ORM\Column(type="boolean", nullable=true, name="is_deleted")
+     */
+    private $isDeleted;
+
+    /**
      * @return mixed
      */
     public function getName()
@@ -79,5 +84,21 @@ class TesterUser extends User
     public function setPin($pin)
     {
         $this->pin = $pin;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIsDeleted()
+    {
+        return $this->isDeleted;
+    }
+
+    /**
+     * @param mixed $isDeleted
+     */
+    public function setIsDeleted($isDeleted)
+    {
+        $this->isDeleted = $isDeleted;
     }
 }

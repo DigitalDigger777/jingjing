@@ -11,6 +11,10 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Class DeviceController
+ * @package App\Controller
+ */
 class DeviceController extends AbstractController
 {
     /**
@@ -42,6 +46,25 @@ class DeviceController extends AbstractController
                 ]
             ];
         } else {
+            $status = $device->getStatus();
+            $statusStr = '';
+
+            switch ($status)
+            {
+                case Device::STATUS_TEST_NOT_TESTED:
+                        $statusStr = 'Not tested';
+                    break;
+                case Device::STATUS_TEST_PASSED:
+                        $statusStr = 'Test Passed';
+                    break;
+                case Device::STATUS_TEST_TEST_FAILED:
+                        $statusStr = 'Test Failed';
+                    break;
+                case Device::STATUS_TEST_WAIT:
+                        $statusStr = 'Test Wait';
+                    break;
+            }
+
             $response = [
                 'id'            => $device->getId(),
                 'name'          => $device->getName(),
@@ -49,7 +72,9 @@ class DeviceController extends AbstractController
                 'is_enabled'    => $device->getIsEnable(),
                 'room'          => $device->getRoom(),
                 'shopperId'     => $device->getShopperId(),
-                'shopperName'   => $device->getShopper() ? $device->getShopper()->getName() : ''
+                'shopperName'   => $device->getShopper() ? $device->getShopper()->getName() : '',
+                'date'          => $device->getDate()->format('Y/m/d H:i'),
+                'status'        => $statusStr
             ];
         }
 
