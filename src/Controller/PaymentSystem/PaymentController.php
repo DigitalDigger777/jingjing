@@ -26,8 +26,18 @@ class PaymentController extends AbstractController
      */
     public function success(Request $request)
     {
+        $userAgent = $_SERVER['HTTP_USER_AGENT'];
+        $paymentSystem = null;
+        if (preg_match('/MicroMessenger/', $userAgent)) {
+            $paymentSystem = 'WeChat';
+        }
+
+        if (preg_match('/AlipayClient/', $userAgent)) {
+            $paymentSystem = 'Alipay';
+        }
+
         return new JsonResponse([
-            'server' => $_SERVER
+            'paymentSystem' => $paymentSystem
         ]);
     }
 
