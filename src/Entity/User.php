@@ -7,12 +7,13 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Entity\ConsumerUser;
 use App\Entity\ShopperUser;
 use App\Entity\AdminUser;
+use App\Entity\TesterUser;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
- * @ORM\DiscriminatorMap({"user" = "User", "consumer" = "ConsumerUser", "shopper" = "ShopperUser", "admin" = "AdminUser"})
+ * @ORM\DiscriminatorMap({"user" = "User", "consumer" = "ConsumerUser", "shopper" = "ShopperUser", "admin" = "AdminUser", "tester" = "TesterUser"})
  */
 class User
 {

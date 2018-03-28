@@ -37,6 +37,9 @@ class DeviceFixtures extends Fixture implements OrderedFixtureInterface
     {
         $shopper = $this->getRandomShopper($manager);
 
+        $date = new \DateTime();
+        $date->sub(new \DateInterval('P' . rand(0, 3) . 'D'));
+
         $device = new Device();
         $device->setShopper($shopper);
         $device->setIsEnable(true);
@@ -44,7 +47,8 @@ class DeviceFixtures extends Fixture implements OrderedFixtureInterface
         $device->setName('Purifier #' . rand(1000,9999));
         $device->setRoom('Room ' . rand(1, 50));
         $device->setShopperId($shopper->getId());
-
+        $device->setStatus(rand(0, 2));
+        $device->setDate($date);
         $manager->persist($device);
         $manager->flush();
     }

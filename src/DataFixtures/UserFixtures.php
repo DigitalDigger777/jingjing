@@ -12,6 +12,7 @@ namespace App\DataFixtures;
 use App\Entity\AdminUser;
 use App\Entity\ConsumerUser;
 use App\Entity\ShopperUser;
+use App\Entity\TesterUser;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -26,6 +27,9 @@ class UserFixtures extends Fixture implements OrderedFixtureInterface
         $this->loadAdmin($manager);
         $this->loadConsumer($manager);
         $this->loadShopper($manager);
+        for ($i = 0; $i < 5; $i++) {
+            $this->loadTester($manager);
+        }
     }
 
     /**
@@ -76,6 +80,28 @@ class UserFixtures extends Fixture implements OrderedFixtureInterface
         $manager->persist($user);
         $manager->flush();
     }
+
+
+    /**
+     * @param ObjectManager $manager
+     */
+    private function loadTester(ObjectManager $manager)
+    {
+        $password = rand(100000, 999999);
+        $user = new TesterUser();
+        $user->setEmail('tester@test.com');
+        $user->setPassword(md5($password));
+        $user->setName('John Doe');
+        $user->setCell('+380991576192');
+        $user->setRole(null);
+        $user->setToken(hash('sha256', $password));
+        $user->setPin($password);
+
+        $manager->persist($user);
+        $manager->flush();
+    }
+
+
 
     public function getOrder()
     {

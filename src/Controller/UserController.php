@@ -81,6 +81,54 @@ class UserController extends AbstractController
      * @param Request $request
      * @return JsonResponse
      *
+     * @Route("/user/login-pin", name="jingjing_user_login_pin")
+     */
+    public function loginPin(Request $request)
+    {
+        $password   = $this->getRequestParameters($request, 'password');
+
+        $method = $request->getMethod();
+        $response = null;
+
+        $em = $this->getDoctrine()->getManager();
+        $user = $em->getRepository(User::class)->findOneBy([
+            'password'  => md5($password)
+        ]);
+
+        if ($user) {
+            $data = [
+                'id'    => $user->getId(),
+                'role'  => $user->getRole(),
+                'token' => $user->getToken()
+            ];
+            $code = 200;
+        } else {
+            $data = [
+                'error' => [
+                    'code'      => '1000',
+                    'message'   => 'User not found'
+                ]
+            ];
+            $code = 500;
+        }
+
+        if ($method == 'OPTIONS') {
+
+            $response = new Response();
+
+        } else {
+
+            $response = new JsonResponse($data, $code);
+
+        }
+
+        return $response;
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     *
      * @Route("/user/save", name="jingjing_user_save")
      */
     public function save(Request $request)

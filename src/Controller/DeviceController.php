@@ -72,7 +72,7 @@ class DeviceController extends AbstractController
 
         $em = $this->getDoctrine()->getManager();
         $qb = $em->createQueryBuilder();
-        $qb->select('d')
+        $qb->select('d, DATE_FORMAT(d.date, \'%Y/%m/%d %H:%i\')')
                 ->from(Device::class, 'd');
 
         if ($shopperId) {
@@ -143,6 +143,44 @@ class DeviceController extends AbstractController
         $response = [
             'message' => 'Save Device Successful'
         ];
+
+        return new JsonResponse($response, $code);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     *
+     * @Route("/device/start-test", name="jingjing_device_start_test")
+     */
+    public function startTest(Request $request)
+    {
+        /**
+         * @var \App\Entity\Device $device
+         * @var \Doctrine\ORM\EntityManager $em
+         */
+        $id = $this->getRequestParameters($request, 'id');
+        $code = 200;
+
+        $em = $this->getDoctrine()->getManager();
+        if ($device = $em->getRepository(Device::class)->find($id)) {
+            $device->setStatus(Device::STATUS_TEST_WAIT);
+
+            $em->persist($device);
+            $em->flush();
+
+            $response = [
+                'started test'
+            ];
+        } else {
+            $response = [
+                'error' => [
+                    'code' => '1003',
+                    'message' => 'Device is not defined'
+                ]
+            ];
+            $code = 500;
+        }
 
         return new JsonResponse($response, $code);
     }

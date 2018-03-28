@@ -9,6 +9,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Device
 {
+    const STATUS_TEST_NOT_TESTED    = 0;
+    const STATUS_TEST_PASSED        = 1;
+    const STATUS_TEST_TEST_FAILED   = 2;
+    const STATUS_TEST_WAIT          = 3;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -40,6 +45,16 @@ class Device
      * @ORM\Column(type="string", length=100)
      */
     private $room;
+
+    /**
+     * @ORM\Column(type="integer", name="status", nullable=true)
+     */
+    private $status;
+
+    /**
+     * @ORM\Column(type="datetime", name="date_changed", nullable=true)
+     */
+    private $date;
 
     /**
      * @ORM\ManyToOne(targetEntity="ShopperUser", inversedBy="devices")
@@ -141,6 +156,38 @@ class Device
     public function setRoom($room)
     {
         $this->room = $room;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param mixed $status
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDate()
+    {
+        return $this->date;
+    }
+
+    /**
+     * @param mixed $date
+     */
+    public function setDate($date)
+    {
+        $this->date = $date;
     }
 
     /**
