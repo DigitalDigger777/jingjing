@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 /**
- * Class WeChatCallbackController
+ * Class PaymentController
  * @package App\Controller\PaymentSystem
  */
 class PaymentController extends AbstractController
@@ -20,25 +20,38 @@ class PaymentController extends AbstractController
 
     /**
      * @param Request $request
-     * @return Response
+     * @return array|JsonResponse|\Symfony\Component\HttpFoundation\RedirectResponse
      *
-     * @Route("/payment/start", name="jingjing_payment_start")
+     * @Route("/payment/start/{deviceId}", name="jingjing_payment_start")
      */
-    public function success(Request $request)
+    public function start(Request $request)
     {
+        $deviceId = $request->get('deviceId');
         $userAgent = $_SERVER['HTTP_USER_AGENT'];
         $paymentSystem = null;
+
         if (preg_match('/MicroMessenger/', $userAgent)) {
             $paymentSystem = 'WeChat';
+            $response = $this->redirect('http://jingjing.fenglinfl.com/consumer/buy-time-slots/wechat/' . $deviceId);
         }
 
         if (preg_match('/AlipayClient/', $userAgent)) {
             $paymentSystem = 'Alipay';
+            $response = $this->redirect('http://jingjing.fenglinfl.com/consumer/buy-time-slots/alipay/' . $deviceId);
         }
 
-        return new JsonResponse([
-            'paymentSystem' => $paymentSystem
-        ]);
+        if (!$paymentSystem) {
+            $response = [
+                'error' => [
+                    'code' => 4002,
+                    'message' => 'undefined payment system'
+                ]
+            ];
+
+            $response = new JsonResponse($response);
+        }
+
+        return $response;
     }
 
 }
